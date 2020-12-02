@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+
+  <!--Responsive Viewport MetaTag -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Outdoorsy</title>
+
+
+  <head>
+    <meta charset="utf-8">
+    <!--Responsive Viewport MetaTag -->
+    <title>Outdoorsy</title>
+    <!--link Bulma.io Stylesheet-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+    <html lang="en">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--link fontawesome-->
+    <!-- <script defer src="https://use.fontawesome.com/releases/v5.14.0/js/all.js"></script> -->
+    <!--link style.css-->
+    <link rel="stylesheet" href="./assets/css/styles.css">
+
+    <!--MAP API LINKS, Source: https://developers.google.com/maps/documentation/javascript/overview#maps_map_simple-html-->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+
+  </head>
+
+<body class="has-background-success-light">
+
+  <!--Bulma.io Navbar - Basic Navbar-->
+  <nav id="nav" class="navbar has-background-success" role="navigation" aria-label="main navigation">
+
+    <!-- navbar brand, navbar menu... -->
+    <div class="navbar-brand">
+      <a class="navbar-item">
+        <img src="./assets/imgs/OUTDoorsy- logo2(2).png" style="max-height: 60px">
+      </a>
+    </div>
+  </nav>
+
+  <div class="section">
+    <div class="container">
+      <div class="columns">
+        <div id="left" class="column is-4">
+          <div id="left-message-block" class="message is-dark has-background-success-light">
+            <div class="message-header">
+              <p>Trails Near Destination</p>
+            </div>
+            <!--Modal button-->
+            <!-- <div>
+              <button id="modal-button" type="button" class="btn btn-primary rounded">Modal Button</button>
+            </div> -->
+
+            <div class="left-message-body">
+            </div>
+          </div>
+
+        </div>
+        <div id="middle" class="column is-4">
+          <div id="center-card" class="card has-text-centered has-background-success-light">
+            <div class="card-image">
+              <figure class="image is-4by3">
+                <img id="main-img"
+                  src="https://www.uncovercolorado.com/wp-content/uploads/2017/10/Eldorado-Canyon-Hiking-Trail-Boulder-1280x720.jpg"
+                  alt="Placeholder image">
+              </figure>
+            </div>
+            <div class="card-content">
+              <div class="media">
+                <div class="media-content">
+                  <p class="title is-4">Search a city by name to find 10 great hiking trails in and around that city. </p>
+                  <p class="subtitle is-6">Next, click a trail and check back here to see a summary of what your next OUTDoorsy adventure might look like. </p>
+                </div>
+              </div>
+              <div class="content">
+                <h4>The map below will show you where to find the selected trailhead. </h4>
+                <p id="summary">Enjoy your next OUTDoorsy adventure! </p>
+                <br>
+                <div class="difficulty"></div>
+                <div class="distance"></div>
+
+                </head>
+                <!-- <a href="#">#css</a> <a href="#">#responsive</a> -->
+                <br>
+                <!-- <time datetime="2016-1-1">11:09 PM - 1 Jan 2016</time> -->
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <div id="right" class="column is-4">
+          <div id="right-message-block" class="message is-dark has-text-centered has-background-success-light">
+            <div class="message-header has-text-centered">
+              <p class="has-text-centered">Today's Local Weather</p>
+            </div>
+            <br>
+            <input id="search-text" type="text" autocomplete="off" placeholder="Search City Here">
+            <form>
+                
+                <select name="activities" id="activities">
+                  <option value="select-an-activity"></option>
+                  <option value="hiking">HIKING</option>
+                  <option value="biking">BIKING</option>
+                  <option value="camping">CAMPING</option>
+                  <option value="fishing">FISHING</option>
+                </select>
+
+              </form>
+            <br>
+            <br>
+            <button id="search-button" type="button" class="destination button is-success is-hovered">search</button>
+            <div id="current-day" class="message">
+
+            </div>
+            <h6 class="has-text-centered">Most Recent Search</h6>
+            <div id="recent-searches">
+
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!--This is a colored message block - WARNING-->
+
+      <!--This is a Card with Image, Header and Text-->
+
+      <!--This is a colored message block - DANGER-->
+
+      <!--This is a colored message block - DARK-->
+      <div id="bottom-bar" class="message is-Dark has-background-success-light">
+        <div class="message-header">
+          Map to Trailhead
+        </div>
+        <div class="message-body">
+          <p>
+
+            <!--Make a div to hold the Google Map-->
+            <iframe
+            width="100%"
+            height="400"
+            frameborder="0" style="border:0"
+            src="https://www.google.com/maps/embed/v1/place?key=AIzaSyDCQ8H5dD98QYZy3Lh_A63gOdM3cY-Hswk
+              &q=Yosemite,CA" allowfullscreen>
+          </iframe>
+
+          </p>
+        </div>
+      </div>
+
+      <footer class="footer py-1">
+        <div class="content has-text-centered">
+          <img src="assets/imgs/OUTDoorsy- logo2(2).png" style="max-height: 60px">
+          <p>Copyright 2020 Outdoorsy</p>
+        </div>
+      </footer>
+
+
+      <!--link to jQuery-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+      <!--link to Bootstrap JS-->
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx"
+        crossorigin="anonymous"></script>
+      <!--link to momentJS-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+      <!--link to script.js-->
+      <script src="./assets/script/script.js"></script>
+</body>
+
+
+</html>
