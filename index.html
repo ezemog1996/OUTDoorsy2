@@ -45,7 +45,7 @@
     <div class="container">
       <div class="columns">
         <div id="left" class="column is-4">
-          <div id="left-message-block" class="message is-dark has-background-success-light">
+          <div id="left-message-block" class="message is-dark has-background-success-light has-text-centered">
             <div class="message-header">
               <p>Trails Near Destination</p>
             </div>
@@ -115,8 +115,9 @@
             <div id="current-day" class="message">
 
             </div>
-            <h6 class="has-text-centered">Most Recent Search</h6>
-            <div id="recent-searches">
+            <button id="recent-searches"class="has-text-centered button is-success">View Your Most Recent Search</button>
+            <div id="recent-search-div">
+              <br>
 
             </div>
           </div>
@@ -141,7 +142,7 @@
           <p>
 
             <!--Make a div to hold the Google Map-->
-            <iframe
+            <iframe id="map"
             width="100%"
             height="400"
             frameborder="0" style="border:0"
