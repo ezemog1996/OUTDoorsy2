@@ -4,6 +4,7 @@ $(document).ready(function () {
     const WeatherAPIKey = "5bb3a5739d78e8deccb5b36c764be06d";
     let searchHistory = JSON.parse(localStorage.getItem("textinput"));
 
+
     if (searchHistory === null) {
         searchHistory = [];
     } else {
@@ -11,17 +12,36 @@ $(document).ready(function () {
         for (var i = 0; i < searchHistory.length; i++) {
             
             //create button template
-            let btnMarkUp = `<button class="recent-search destination button is-success is-fullwidth is-outlined hide" "cityname="${searchHistory[i]}">${searchHistory[i]}</button><br>`;
+            let btnMarkUp = `<br class="recent-br hide"><button class="recent-search destination button is-success is-fullwidth is-outlined hide" "cityname="${searchHistory[i]}">${searchHistory[i]}</button>`;
             //add button to container for btns
-            $("#recent-search-div").append(btnMarkUp);
+            $("#recent-search-div").prepend(btnMarkUp);
         }
 
         document.querySelector("#recent-searches").addEventListener("click", function() {
             var recentBtns= document.querySelectorAll(".recent-search");
-            for (i = 0; i < recentBtns.length; i++) {
-                if (recentBtns[i].classList.contains("hide")) {
-                    recentBtns[i].classList.remove("hide")
-                } else {recentBtns[i].classList.add("hide")}
+            var recentBrs = document.querySelectorAll(".recent-br");
+            if ($("#recent-searches").text() === "View Your Passed Searches") {
+                for (i = 0; i < recentBtns.length; i++) {
+                    if (recentBtns[i].classList.contains("hide")) {
+                        recentBtns[i].classList.remove("hide");
+                    }
+                }
+                for (i = 0; i < recentBrs.length; i++) {
+                    if (recentBrs[i].classList.contains("hide")) {
+                        recentBrs[i].classList.remove("hide");
+                    }
+                }
+                $("#recent-searches").text("Hide Your Passed Searches")
+            } else if ($("#recent-searches").text() === "Hide Your Passed Searches") {
+                for (i = 0; i < recentBtns.length; i++) {
+                    if (recentBtns[i].classList.contains("hide")) {
+                    } else {recentBtns[i].classList.add("hide")}
+                }
+                for (i = 0; i < recentBrs.length; i++) {
+                    if (recentBrs[i].classList.contains("hide")) {
+                    } else {recentBrs[i].classList.add("hide")}
+                }
+                $("#recent-searches").text("View Your Passed Searches")
             }
         })
 
@@ -31,8 +51,22 @@ $(document).ready(function () {
                 document.querySelectorAll(".recent-search")[i].classList.add("hide")
             }
         });
-    }
 
+        document.querySelector("#clear-searches").addEventListener("click", function() {
+            var recentBtns = document.querySelectorAll(".recent-search");
+            var recentBrs = document.querySelectorAll(".recent-br");
+            for (i = 0; i < recentBtns.length; i++) {
+                document.querySelector("#recent-search-div").removeChild(recentBtns[i]);
+            };
+            for (i = 0; i < recentBrs.length; i++) {
+                document.querySelector("#recent-search-div").removeChild(recentBrs[i])
+            }
+            $("#recent-searches").text("View Your Passed Searches")
+            searchHistory = [];
+            localStorage.setItem("textinput", JSON.stringify(searchHistory));
+        })
+
+    }
 
     //On click of search button
     $("#search-button").on('click', function (event) {
@@ -47,9 +81,24 @@ $(document).ready(function () {
         localStorage.setItem('textinput', JSON.stringify(searchHistory));
 
         //create button template
-        let btnMarkUp = `<button class="recent-search destination button is-success is-fullwidth is-outlined" "cityname="${userInput}">${userInput}</button><br>`;
+        let btnMarkUp = `<br class="recent-br hide"><button class="recent-search destination button is-success is-fullwidth is-outlined hide" "cityname="${userInput}">${userInput}</button>`;
         //add button to container for btns
-        $("#recent-search-div").append(btnMarkUp);
+        $("#recent-search-div").prepend(btnMarkUp);
+        if ($("#recent-searches").text() === "Hide Your Passed Searches") {
+            var recentBrs = document.querySelectorAll(".recent-br");
+            for (i = 0; i < recentBrs.length; i++) {
+                if (recentBrs[i].classList.contains("hide")) {
+                    recentBrs[i].classList.remove("hide");
+                }
+            }
+            var recentBtns= document.querySelectorAll(".recent-search");
+            for (i = 0; i < recentBtns.length; i++) {
+                if (recentBtns[i].classList.contains("hide")) {
+                    recentBtns[i].classList.remove("hide");
+                }
+            }
+        }
+
         //add event listener to it
         $(".recent-search").on("click", function (event) {
             getWeatherData(event.target.textContent);
