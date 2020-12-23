@@ -7,72 +7,85 @@ $(document).ready(function () {
 
     if (searchHistory === null) {
         searchHistory = [];
-    } else {
-    
-        for (var i = 0; i < searchHistory.length; i++) {
-            
-            //create button template
-            let btnMarkUp = `<br class="recent-br hide"><button class="recent-search destination button is-success is-fullwidth is-outlined hide" "cityname="${searchHistory[i]}">${searchHistory[i]}</button>`;
-            //add button to container for btns
-            $("#recent-search-div").prepend(btnMarkUp);
-        }
-
-        document.querySelector("#recent-searches").addEventListener("click", function() {
-            var recentBtns= document.querySelectorAll(".recent-search");
-            var recentBrs = document.querySelectorAll(".recent-br");
-            if ($("#recent-searches").text() === "View Your Passed Searches") {
-                for (i = 0; i < recentBtns.length; i++) {
-                    if (recentBtns[i].classList.contains("hide")) {
-                        recentBtns[i].classList.remove("hide");
-                    }
-                }
-                for (i = 0; i < recentBrs.length; i++) {
-                    if (recentBrs[i].classList.contains("hide")) {
-                        recentBrs[i].classList.remove("hide");
-                    }
-                }
-                $("#recent-searches").text("Hide Your Passed Searches")
-            } else if ($("#recent-searches").text() === "Hide Your Passed Searches") {
-                for (i = 0; i < recentBtns.length; i++) {
-                    if (recentBtns[i].classList.contains("hide")) {
-                    } else {recentBtns[i].classList.add("hide")}
-                }
-                for (i = 0; i < recentBrs.length; i++) {
-                    if (recentBrs[i].classList.contains("hide")) {
-                    } else {recentBrs[i].classList.add("hide")}
-                }
-                $("#recent-searches").text("View Your Passed Searches")
-            }
-        })
-
-        $(".recent-search").on("click", function (event) {
-            getWeatherData(event.target.textContent);
-            for (i = 0; i < document.querySelectorAll(".recent-search").length; i++) {
-                document.querySelectorAll(".recent-search")[i].classList.add("hide")
-            }
-        });
-
-        document.querySelector("#clear-searches").addEventListener("click", function() {
-            var recentBtns = document.querySelectorAll(".recent-search");
-            var recentBrs = document.querySelectorAll(".recent-br");
-            for (i = 0; i < recentBtns.length; i++) {
-                document.querySelector("#recent-search-div").removeChild(recentBtns[i]);
-            };
-            for (i = 0; i < recentBrs.length; i++) {
-                document.querySelector("#recent-search-div").removeChild(recentBrs[i])
-            }
-            $("#recent-searches").text("View Your Passed Searches")
-            searchHistory = [];
-            localStorage.setItem("textinput", JSON.stringify(searchHistory));
-        })
-
     }
+
+    for (var i = 0; i < searchHistory.length; i++) {
+        
+        //create button template
+        let btnMarkUp = `<br class="recent-br hide"><button class="recent-search destination button is-success is-fullwidth is-outlined hide" "cityname="${searchHistory[i]}">${searchHistory[i]}</button>`;
+        //add button to container for btns
+        $("#recent-search-div").prepend(btnMarkUp);
+    }
+
+    document.querySelector("#recent-searches").addEventListener("click", function() {
+        var recentBtns= document.querySelectorAll(".recent-search");
+        var recentBrs = document.querySelectorAll(".recent-br");
+        if ($("#recent-searches").text() === "View Your Passed Searches") {
+            recentBtns.forEach((item) => {
+                if (item.classList.contains("hide")) {
+                    item.classList.remove("hide");
+                }
+            })
+            recentBrs.forEach((item => {
+                if (item.classList.contains("hide")) {
+                    item.classList.remove("hide");
+                }
+            }))
+
+            if (recentBtns.length === 0) {
+                document.querySelector("#no-searches").classList.remove("hide")
+                var noSearchesTimer = setInterval(function() {
+                    document.querySelector("#no-searches").classList.add("hide")
+                    clearInterval(noSearchesTimer)
+                }, 2000)
+            } else {$("#recent-searches").text("Hide Your Passed Searches")}
+        } else if ($("#recent-searches").text() === "Hide Your Passed Searches") {
+            recentBtns.forEach((item) => {
+                if (item.classList.contains("hide")) {
+                } else {item.classList.add("hide")}
+            });
+            recentBrs.forEach((item) => {
+                if (item.classList.contains("hide")) {
+                } else {item.classList.add("hide")}
+            })
+            $("#recent-searches").text("View Your Passed Searches")
+        }
+    })
+
+    $(".recent-search").on("click", function (event) {
+        getWeatherData(event.target.textContent);
+        for (i = 0; i < document.querySelectorAll(".recent-search").length; i++) {
+            document.querySelectorAll(".recent-search")[i].classList.add("hide")
+        }
+        $("#recent-searches").text("View Your Passed Searches");
+    });
+
+    document.querySelector("#clear-searches").addEventListener("click", function() {
+        var recentBtns = document.querySelectorAll(".recent-search");
+        var recentBrs = document.querySelectorAll(".recent-br");
+        recentBtns.forEach(item => document.querySelector("#recent-search-div").removeChild(item));
+        recentBrs.forEach(item => document.querySelector("#recent-search-div").removeChild(item));
+        $("#recent-searches").text("View Your Passed Searches")
+        searchHistory = [];
+        localStorage.setItem("textinput", JSON.stringify(searchHistory));
+    })
 
     //On click of search button
     $("#search-button").on('click', function (event) {
 
         event.preventDefault()
-        //get users input cityName
+        
+        findTrails();
+    })
+
+    $("#search-text").on("keypress", function(event) {
+        if (event.keyCode === 13) {
+            findTrails();
+        }
+    });
+
+    //get users input cityName
+    function findTrails() {
         const userInput = $("#search-text").val();
         //show all weather data
         getWeatherData(userInput);
@@ -103,7 +116,8 @@ $(document).ready(function () {
         $(".recent-search").on("click", function (event) {
             getWeatherData(event.target.textContent);
         });
-    })
+    }
+    
     const getWeatherData = (cityName) => {
         const userChoiceURL = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${WeatherAPIKey}`;
         //Pull Current Day data from weather api
@@ -111,7 +125,7 @@ $(document).ready(function () {
             url: userChoiceURL,
             method: "GET"
         }).then(function (res) {
-            console.log("current weather: ", res);
+            
 
             // update map with city
             
@@ -133,42 +147,77 @@ $(document).ready(function () {
             $("#current-day").html(currentMarkUp);
 
             //the hiking trails of 
-            console.log(res)
+            
             const lat = (res.coord.lat)
             const lon = (res.coord.lon)
 
             $("#map").attr("src", `https://www.google.com/maps/embed/v1/view?key=AIzaSyDCQ8H5dD98QYZy3Lh_A63gOdM3cY-Hswk
                                     &center=${lat},${lon}&zoom=12`)
 
-            console.log(document.querySelector("#activities").value)
 
-            if (document.querySelector("#activities").value === "hiking") {
-                const hikingKey = "200971209-f8aa46e467071360508bc929af7dda47"
-                const hikingURL = `https://www.hikingproject.com/data/get-trails?lat=${lat}&lon=${lon}&sort=distance&maxResults=500&key=${hikingKey}`
-                $.ajax({
-                    url: hikingURL,
-                    method: "GET"
-                }).then(function (resHike) {
-                    console.log(resHike);
-                    //trails buttons for loop the length of trails array in hike
-                    let trailsMarkUp = "";
+            const hikingKey = "200971209-f8aa46e467071360508bc929af7dda47"
+            const hikingURL = `https://www.hikingproject.com/data/get-trails?lat=${lat}&lon=${lon}&sort=distance&maxResults=500&key=${hikingKey}`
+            $.ajax({
+                url: hikingURL,
+                method: "GET"
+            }).then(function (resHike) {
+                //trails buttons for loop the length of trails array in hike
+                let trailsMarkUp = "";
 
-                    for (let i = 0; i < 10; i++) {
-                        trailsMarkUp +=
-                            `
-                        <button class="destination button is-success is-outlined is-fullwidth">${resHike.trails[i].name}</button>
-                        <br>
-                        `;
-                        $(".left-message-body").html(trailsMarkUp);
+                for (let i = 0; i < 10; i++) {
+                    trailsMarkUp +=
+                        `
+                    <button class="destination button is-success is-outlined is-fullwidth">${resHike.trails[i].name}</button>
+                    <br>
+                    `;
+                    $(".left-message-body").html(trailsMarkUp);
 
 
+                }
+                let page = 0;
+                let shownPage = 1
+                const viewMoreButton = "<button class='page-button previous has-text-centered button is-success'><i class='fas fa-arrow-left'></i></button> <span id='page'>page " + shownPage + "</span> <button class='page-button next has-text-centered button is-success'><i class='fas fa-arrow-right'></i></button>";
+                $(".left-message-body").append(viewMoreButton);
+                function nextOrPrevious() {
+                    for (i = 0; i < document.querySelectorAll(".page-button").length; i++) {
+                        document.querySelectorAll(".page-button")[i].addEventListener("click", function(event) {
+                            if (event.target.classList.contains('previous')) {
+                                if (page !== 0) {
+                                    page-=10;
+                                    shownPage-=1;
+                                    
+                                }
+                            } else if (event.target.classList.contains('next')) {
+                                page+=10;
+                                shownPage+=1;
+                                
+                            }
+
+                            trailsMarkUp = "";
+
+                        for (j = page; j < page + 10; j++) {
+                            trailsMarkUp +=
+                                `
+                            <button class="destination button is-success is-outlined is-fullwidth">${resHike.trails[j].name}</button>
+                            <br>
+                            `;
+                            $(".left-message-body").html(trailsMarkUp);
+                        }
+
+                        $(".left-message-body").append(viewMoreButton);
+                        document.querySelector("#page").textContent = "page " + shownPage;
+
+                        chosenTrail();
+                        nextOrPrevious();
+                        })
                     }
-                    var viewMoreButton = "<button class='has-text-centered button is-success'>View More Results</button>";
-                    $(".left-message-body").append(viewMoreButton);
+                }
+                nextOrPrevious();
+                
+                function chosenTrail() {
                     var destinations = $(".destination");
                     for (i = 0; i < destinations.length; i++) {
                         destinations[i].addEventListener("click", function (event) {
-                            console.log(resHike.trails)
                             for (j = 0; j < resHike.trails.length; j++) {
                                 if (event.target.textContent === resHike.trails[j].name) {
                                     $(".title").text(resHike.trails[j].name);
@@ -183,23 +232,9 @@ $(document).ready(function () {
                             }
                         })
                     }
-                });
-            } else if (document.querySelector("#activities").value === "camping") {
-                console.log("We wanna camp!")
-            }
-
-            // var settings = {
-            //     "url": `https://cors-anywhere.herokuapp.com/https://ridb.recreation.gov/api/v1/facilities?limit=50&offset=0&full=true&latitude=${lat}&longitude=${lon}&radius=10&activity=&sort=distance&radius=25&apikey=36db8c2c-0f5e-4c3d-878c-d0f5d7702064`,
-            //     "method": "GET",
-            //     "datatype": "json",
-            //     headers: {
-            //     "x-requested-with": "xhr"
-            //     }
-            //   };
-              
-            //   $.ajax(settings).done(function (response) {
-            //     console.log(response);
-            //   });
+                }
+                chosenTrail();
+            });
 
         });
 
@@ -217,21 +252,3 @@ if (screen.width <= 768) {
     $("#middle").html(destinationsDiv);
     $("#right").html(descriptionDiv);
 }
-
-
-// $("#search-text").on("keypress", function(event) {
-//     if (event.key="enter") {
-//         var settings = {
-//             "url": "https://cors-anywhere.herokuapp.com/https://ridb.recreation.gov/api/v1/facilities?limit=50&offset=0&full=true&state=CA&activity=BOATING&apikey=36db8c2c-0f5e-4c3d-878c-d0f5d7702064",
-//             "method": "GET",
-//             "datatype": "json",
-//             headers: {
-//             "x-requested-with": "xhr"
-//             }
-//           };
-          
-//           $.ajax(settings).done(function (response) {
-//             console.log(response);
-//           });
-//     }
-// })
